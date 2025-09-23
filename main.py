@@ -2,6 +2,7 @@
 #Jakob Salinas     R#11831816
 import pandas as pd
 import sklearn as skl
+from sklearn.metrics import r2_score, mean_squared_error
 
 sheet = pd.read_excel('uber_fare_sample.xlsx') #main file
 sheet_copy = sheet.copy() #copy for testing row 254 in excel
@@ -31,10 +32,13 @@ output = sheet[price]
 in_train, in_test, out_train, out_test = skl.model_selection.train_test_split(weighted_inputs, output, test_size=0.4)
 model = skl.linear_model.LinearRegression()
 model.fit(in_train, out_train)
+y_pred = model.predict(in_test)
 
 print("Accuracy:", model.score(in_test, out_test))
 print("weights of each column in order:", model.coef_)
 print("Feature order:", list(in_train.columns))
+print("R^2 = ",r2_score(out_test, y_pred))
+print("Mean squared error:", mean_squared_error(out_test, y_pred))
 
 #includes only row 254 for prediction
 ids = 252
